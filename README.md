@@ -47,6 +47,6 @@
 
 ## Technologies Used
 - .NET 8, ASP.NET Core MVC, Entity Framework Core
-- JWT Authentication, SQLite Database
+- JWT Authentication, SQL Database
 - Bootstrap 5, Swagger/OpenAPI
 - Clean Architecture, Repository Pattern

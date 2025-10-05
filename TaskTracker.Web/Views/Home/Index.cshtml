@@ -1,0 +1,637 @@
+﻿@model TaskTracker.Web.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Task Tracker";
+}
+
+<div class="container mt-4">
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Hero Section -->
+                <div class="text-center mb-5">
+                    <h1 class="display-4 text-primary mb-3">
+                        <i class="fas fa-tasks me-2"></i>Welcome to Task Tracker
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Organize your projects and tasks efficiently. Collaborate with your team and get things done!
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-3 mb-5">
+                        <a href="@Url.Action("Register", "Account")" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Get Started - Register
+                        </a>
+                        <a href="@Url.Action("Login", "Account")" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </a>
+                    </div>
+
+                    <!-- Demo Info -->
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>Demo Access
+                        </h5>
+                        <p class="mb-0">
+                            You can also try the app with our demo account:
+                            <strong>Username: admin</strong> | <strong>Password: password</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="row mb-5">
+                    <div class="col-md-4 text-center">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="fas fa-project-diagram fa-2x text-primary mb-3"></i>
+                                <h5>Project Management</h5>
+                                <p class="text-muted">Create and organize projects with detailed descriptions and tracking.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="fas fa-tasks fa-2x text-primary mb-3"></i>
+                                <h5>Task Tracking</h5>
+                                <p class="text-muted">Manage tasks with due dates, status updates, and project associations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body">
+                                <i class="fas fa-filter fa-2x text-primary mb-3"></i>
+                                <h5>Smart Filtering</h5>
+                                <p class="text-muted">Filter tasks by status, due date, and projects for better organization.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Public Projects & Tasks Preview -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-project-diagram me-2"></i>Public Projects
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Projects.Any())
+                                {
+                                    <div class="list-group list-group-flush">
+                                        @foreach (var project in Model.Projects.Take(3))
+                                        {
+                                            <div class="list-group-item px-0">
+                                                <h6 class="mb-1">@project.Name</h6>
+                                                <p class="text-muted small mb-1">@project.Description</p>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-tasks me-1"></i>@project.TaskCount tasks
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (Model.Projects.Count() > 3)
+                                    {
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted">And @(Model.Projects.Count() - 3) more projects...</small>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No public projects available.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-tasks me-2"></i>Recent Tasks
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Tasks.Any())
+                                {
+                                    <div class="list-group list-group-flush">
+                                        @foreach (var task in Model.Tasks.Take(3))
+                                        {
+                                            <div class="list-group-item px-0">
+                                                <h6 class="mb-1">@task.Title</h6>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">@task.ProjectName</small>
+                                                    <span class="badge bg-@(task.Status == TaskTracker.Core.Entities.TaskStatus.Completed ? "success" : task.Status == TaskTracker.Core.Entities.TaskStatus.InProgress ? "primary" : "warning")">
+                                                        <h4 class="card-title">@Model.Tasks.Count(t => t.Status == TaskTracker.Core.Entities.TaskStatus.Completed)</h4>
+                                                        @task.Status
+                                                    </span>
+                                                </div>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar me-1"></i>Due: @task.DueDate.ToString("MMM dd, yyyy")
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (Model.Tasks.Count() > 3)
+                                    {
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted">And @(Model.Tasks.Count() - 3) more tasks...</small>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No tasks available.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="text-center mt-5">
+                    <div class="card bg-light border-0">
+                        <div class="card-body py-5">
+                            <h3 class="card-title">Ready to Get Started?</h3>
+                            <p class="card-text text-muted mb-4">
+                                Join thousands of users who are already organizing their work with Task Tracker.
+                            </p>
+                            <a href="@Url.Action("Register", "Account")" class="btn btn-primary btn-lg">
+                                <i class="fas fa-rocket me-2"></i>Start Your Free Account
+                            </a>
+                            <p class="small text-muted mt-3">
+                                No credit card required. Setup takes less than 1 minute.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Authenticated User Dashboard -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+            </h2>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                    <i class="fas fa-plus me-1"></i>Create Task
+                </button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                    <i class="fas fa-folder-plus me-1"></i>Create Project
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">@Model.Projects.Count()</h4>
+                                <p class="card-text">Projects</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-project-diagram fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">@Model.Tasks.Count(t => t.Status == TaskTracker.Core.Entities.TaskStatus.Completed)</h4>
+                                <p class="card-text">Completed Tasks</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-check-circle fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">@Model.Tasks.Count(t => t.Status == TaskTracker.Core.Entities.TaskStatus.InProgress)</h4>
+                                <p class="card-text">In Progress</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-spinner fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">@Model.Tasks.Count(t => t.Status == TaskTracker.Core.Entities.TaskStatus.Pending)</h4>
+                                <p class="card-text">Pending Tasks</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-tasks me-2"></i>Your Tasks
+                        </h5>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                                <i class="fas fa-plus me-1"></i>Add Task
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Tasks.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Project</th>
+                                            <th>Due Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var task in Model.Tasks)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <strong>@task.Title</strong>
+                                                    @if (!string.IsNullOrEmpty(task.Description))
+                                                    {
+                                                        <br>
+                                                        <small class="text-muted">@task.Description</small>
+                                                    }
+                                                </td>
+                                                <td>@task.ProjectName</td>
+                                                <td>
+                                                    <span class="@(task.DueDate < DateTime.Now && task.Status != TaskTracker.Core.Entities.TaskStatus.Completed ? "text-danger" : "")">
+                                                        @task.DueDate.ToString("MMM dd, yyyy")
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-@(task.Status == TaskTracker.Core.Entities.TaskStatus.Completed ? "success" : task.Status == TaskTracker.Core.Entities.TaskStatus.InProgress ? "primary" : "warning")">
+                                                        @task.Status
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-sm">
+                                                        <button type="button" class="btn btn-outline-primary"
+                                                                data-bs-toggle="modal" data-bs-target="#editTaskModal"
+                                                                data-task-id="@task.Id"
+                                                                data-task-title="@task.Title"
+                                                                data-task-description="@task.Description"
+                                                                data-task-duedate="@task.DueDate.ToString("yyyy-MM-dd")"
+                                                                data-task-status="@task.Status"
+                                                                data-task-projectid="@task.ProjectId">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <form asp-controller="Tasks" asp-action="Delete" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@task.Id" />
+                                                            <button type="submit" class="btn btn-outline-danger"
+                                                                    onclick="return confirm('Are you sure you want to delete this task?')">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="fas fa-tasks fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No tasks yet</h5>
+                                <p class="text-muted">Get started by creating your first task!</p>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                                    <i class="fas fa-plus me-1"></i>Create Your First Task
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-project-diagram me-2"></i>Your Projects
+                        </h5>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                                <i class="fas fa-plus me-1"></i>Add Project
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Projects.Any())
+                        {
+                            <div class="list-group list-group-flush">
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <div class="list-group-item px-0">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h6 class="mb-1">@project.Name</h6>
+                                                <p class="text-muted small mb-1">@project.Description</p>
+                                            </div>
+                                            <div class="btn-group btn-group-sm ms-2">
+                                                <button type="button" class="btn btn-outline-primary"
+                                                        data-bs-toggle="modal" data-bs-target="#editProjectModal"
+                                                        data-project-id="@project.Id"
+                                                        data-project-name="@project.Name"
+                                                        data-project-description="@project.Description">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <form asp-controller="Projects" asp-action="Delete" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@project.Id" />
+                                                    <button type="submit" class="btn btn-outline-danger"
+                                                            onclick="return confirm('Are you sure you want to delete this project? All tasks in this project will also be deleted.')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>Created: @project.CreatedAt.ToString("MMM dd, yyyy")
+                                            </small>
+                                            <span class="badge bg-primary rounded-pill">@project.TaskCount tasks</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="fas fa-project-diagram fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No projects yet</h5>
+                                <p class="text-muted">Start by creating your first project!</p>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                                    <i class="fas fa-plus me-1"></i>Create Your First Project
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Project Modal -->
+        <div class="modal fade" id="createProjectModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-folder-plus me-2"></i>Create New Project
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form asp-controller="Projects" asp-action="Create" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="projectName" class="form-label">Project Name *</label>
+                                <input type="text" class="form-control" id="projectName" name="name" required
+                                       placeholder="Enter project name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="projectDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="projectDescription" name="description" rows="3"
+                                      placeholder="Describe your project (optional)"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Create Project
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Task Modal -->
+        <div class="modal fade" id="createTaskModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-plus me-2"></i>Create New Task
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form asp-controller="Tasks" asp-action="Create" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="taskTitle" class="form-label">Title *</label>
+                                <input type="text" class="form-control" id="taskTitle" name="title" required
+                                       placeholder="Enter task title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="taskDescription" name="description" rows="3"
+                                      placeholder="Describe your task (optional)"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDueDate" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="taskDueDate" name="dueDate"
+                                       value="@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskStatus" class="form-label">Status</label>
+                                <select class="form-control" id="taskStatus" name="status">
+                                    <option value="Pending">Pending</option>
+                                    <option value="InProgress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskProject" class="form-label">Project *</label>
+                                <select class="form-control" id="taskProject" name="projectId" required>
+                                    <option value="">Select a project</option>
+                                    @foreach (var project in Model.Projects)
+                                    {
+                                        <option value="@project.Id">@project.Name</option>
+                                    }
+                                </select>
+                                @if (!Model.Projects.Any())
+                                {
+                                    <small class="text-danger">You need to create a project first!</small>
+                                }
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary" @(!Model.Projects.Any() ? "disabled" : "")>
+                                <i class="fas fa-plus me-1"></i>Create Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Project Modal -->
+        <div class="modal fade" id="editProjectModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-edit me-2"></i>Edit Project
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form asp-controller="Projects" asp-action="Edit" method="post">
+                        <input type="hidden" id="editProjectId" name="id" />
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editProjectName" class="form-label">Project Name *</label>
+                                <input type="text" class="form-control" id="editProjectName" name="name" required
+                                       placeholder="Enter project name">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editProjectDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="editProjectDescription" name="description" rows="3"
+                                      placeholder="Describe your project (optional)"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Update Project
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Task Modal -->
+        <div class="modal fade" id="editTaskModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-edit me-2"></i>Edit Task
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form asp-controller="Tasks" asp-action="Edit" method="post">
+                        <input type="hidden" id="editTaskId" name="id" />
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editTaskTitle" class="form-label">Title *</label>
+                                <input type="text" class="form-control" id="editTaskTitle" name="title" required
+                                       placeholder="Enter task title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTaskDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="editTaskDescription" name="description" rows="3"
+                                      placeholder="Describe your task (optional)"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTaskDueDate" class="form-label">Due Date</label>
+                                <input type="date" class="form-control" id="editTaskDueDate" name="dueDate">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTaskStatus" class="form-label">Status</label>
+                                <select class="form-control" id="editTaskStatus" name="status">
+                                    <option value="Pending">Pending</option>
+                                    <option value="InProgress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editTaskProject" class="form-label">Project *</label>
+                                <select class="form-control" id="editTaskProject" name="projectId" required>
+                                    <option value="">Select a project</option>
+                                    @foreach (var project in Model.Projects)
+                                    {
+                                        <option value="@project.Id">@project.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>Update Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @section Scripts {
+            <script>
+                // Project Edit Modal Handler
+                document.getElementById('editProjectModal').addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var projectId = button.getAttribute('data-project-id');
+                    var projectName = button.getAttribute('data-project-name');
+                    var projectDescription = button.getAttribute('data-project-description');
+
+                    document.getElementById('editProjectId').value = projectId;
+                    document.getElementById('editProjectName').value = projectName;
+                    document.getElementById('editProjectDescription').value = projectDescription || '';
+                });
+
+                
+                document.getElementById('editTaskModal').addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var taskId = button.getAttribute('data-task-id');
+                    var taskTitle = button.getAttribute('data-task-title');
+                    var taskDescription = button.getAttribute('data-task-description');
+                    var taskDueDate = button.getAttribute('data-task-duedate');
+                    var taskStatus = button.getAttribute('data-task-status');
+                    var taskProjectId = button.getAttribute('data-task-projectid');
+
+                    document.getElementById('editTaskId').value = taskId;
+                    document.getElementById('editTaskTitle').value = taskTitle;
+                    document.getElementById('editTaskDescription').value = taskDescription || '';
+                    document.getElementById('editTaskDueDate').value = taskDueDate;
+                    document.getElementById('editTaskStatus').value = taskStatus;
+                    document.getElementById('editTaskProject').value = taskProjectId;
+                });
+            </script>
+        }
+    }
+</div>

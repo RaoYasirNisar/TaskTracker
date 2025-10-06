@@ -22,7 +22,6 @@ public class ProjectsController : ControllerBase
         _userRepository = userRepository;
         _logger = logger;
     }
-
     [HttpPost]
     public async Task<ActionResult<ProjectDto>> CreateProject(CreateProjectDto createDto)
     {

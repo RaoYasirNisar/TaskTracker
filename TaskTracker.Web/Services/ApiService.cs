@@ -204,7 +204,7 @@ public class ApiService : IApiService
     }
 }
 
-// DTO classes for Web project
+
 //public class ProjectDto
 //{
 //    public int Id { get; set; }

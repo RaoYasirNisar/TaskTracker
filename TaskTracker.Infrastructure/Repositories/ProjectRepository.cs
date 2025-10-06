@@ -25,13 +25,11 @@ public class ProjectRepository : IProjectRepository
         await _context.SaveChangesAsync();
         return entity;
     }
-
     public async Task UpdateAsync(Project entity)
     {
         _context.Projects.Update(entity);
         await _context.SaveChangesAsync();
     }
-
     public async Task DeleteAsync(Project entity)
     {
         _context.Projects.Remove(entity);

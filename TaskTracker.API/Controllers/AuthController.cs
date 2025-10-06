@@ -27,19 +27,16 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         try
-        {
-            // Validate request
+        {    
             if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
                 return BadRequest("Username and password are required");
 
             if (string.IsNullOrWhiteSpace(request.Email))
                 return BadRequest("Email is required");
-
-            // Check if user already exists
+    
             if (await _userRepository.UserExistsAsync(request.Username, request.Email))
                 return BadRequest("Username or email already exists");
-
-            // Create user
+   
             var user = new User
             {
                 Username = request.Username,
@@ -49,7 +46,6 @@ public class AuthController : ControllerBase
 
             var createdUser = await _userRepository.AddAsync(user);
 
-            // Generate token
             var token = _authService.GenerateJwtToken(createdUser);
 
             return Ok(new AuthResponse

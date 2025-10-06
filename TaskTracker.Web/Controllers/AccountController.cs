@@ -31,8 +31,7 @@ public class AccountController : Controller
             var token = await _apiService.LoginAsync(username, password);
 
             if (!string.IsNullOrEmpty(token))
-            {
-                // Create claims identity
+            {        
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, username),
@@ -49,7 +48,6 @@ public class AccountController : Controller
                         IsPersistent = true,
                         ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2)
                     });
-
                 // Store token in cookie for API calls
                 Response.Cookies.Append("AuthToken", token, new CookieOptions
                 {

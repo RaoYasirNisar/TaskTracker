@@ -44,6 +44,22 @@
 - `TaskTracker.Web` - MVC UI consuming API
 - `TaskTracker.Core` - Domain models & interfaces
 - `TaskTracker.Infrastructure` - Data layer with EF Core
+  
+## Test Types Implemented:
+
+✅ **Unit Tests** - Domain logic, services, repositories  
+✅ **Integration Tests** - API endpoints, database operations  
+✅ **Authentication Tests** - JWT token validation  
+✅ **Validation Tests** - Input validation and error handling  
+✅ **Pagination Tests** - Filtering and pagination logic  
+
+## Key Testing Features:
+
+- **In-memory database** for isolated testing
+- **Mock dependencies** with Moq
+- **Test fixtures** for shared setup
+- **Theory tests** for multiple test cases
+- **Integration testing** with WebApplicationFactory
 
 ## Technologies Used
 - .NET 8, ASP.NET Core MVC, Entity Framework Core

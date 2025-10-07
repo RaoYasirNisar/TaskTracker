@@ -23,10 +23,10 @@ public class TasksControllerTests : IClassFixture<WebApplicationFactory<Program>
     [Fact]
     public async Task GetTasks_WithoutFilters_ShouldReturnOk()
     {
-        // Act
+       
         var response = await _client.GetAsync("/api/tasks");
 
-        // Assert
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();
@@ -40,20 +40,18 @@ public class TasksControllerTests : IClassFixture<WebApplicationFactory<Program>
     [Fact]
     public async Task GetTasks_WithStatusFilter_ShouldReturnFilteredResults()
     {
-        // Act
+
         var response = await _client.GetAsync("/api/tasks?status=0"); // Pending status
 
-        // Assert
+
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
     public async Task GetTasks_WithPagination_ShouldReturnPagedResults()
-    {
-        // Act
+    {   
         var response = await _client.GetAsync("/api/tasks?pageNumber=1&pageSize=5");
-
-        // Assert
+    
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
         var content = await response.Content.ReadAsStringAsync();

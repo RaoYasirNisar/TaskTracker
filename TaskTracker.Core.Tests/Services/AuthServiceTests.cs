@@ -24,15 +24,12 @@ public class AuthServiceTests
 
     [Fact]
     public void HashPassword_ShouldReturnConsistentHash()
-    {
-        // Arrange
+    {   
         var password = "testpassword";
 
-        // Act
         var hash1 = _authService.HashPassword(password);
         var hash2 = _authService.HashPassword(password);
 
-        // Assert
         Assert.Equal(hash1, hash2);
         Assert.NotNull(hash1);
         Assert.NotEmpty(hash1);
@@ -41,14 +38,11 @@ public class AuthServiceTests
     [Fact]
     public void VerifyPassword_WithCorrectPassword_ShouldReturnTrue()
     {
-        // Arrange
         var password = "testpassword";
         var hash = _authService.HashPassword(password);
 
-        // Act
         var result = _authService.VerifyPassword(password, hash);
 
-        // Assert
         Assert.True(result);
     }
 

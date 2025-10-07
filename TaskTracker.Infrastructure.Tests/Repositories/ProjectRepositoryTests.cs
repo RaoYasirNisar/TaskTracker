@@ -24,13 +24,11 @@ public class ProjectRepositoryTests
     [Fact]
     public async Task AddAsync_ShouldAddProject()
     {
-        // Arrange
+  
         var project = new Project { Name = "Test Project", UserId = 1 };
-
-        // Act
+     
         var result = await _repository.AddAsync(project);
-
-        // Assert
+        
         Assert.NotNull(result);
         Assert.Equal("Test Project", result.Name);
         Assert.True(result.Id > 0);
@@ -38,15 +36,12 @@ public class ProjectRepositoryTests
 
     [Fact]
     public async Task GetByIdAsync_WithExistingId_ShouldReturnProject()
-    {
-        // Arrange
+    {   
         var project = new Project { Name = "Test Project", UserId = 1 };
         await _repository.AddAsync(project);
-
-        // Act
+   
         var result = await _repository.GetByIdAsync(project.Id);
 
-        // Assert
         Assert.NotNull(result);
         Assert.Equal(project.Id, result.Id);
     }
@@ -54,10 +49,8 @@ public class ProjectRepositoryTests
     [Fact]
     public async Task GetByIdAsync_WithNonExistingId_ShouldReturnNull()
     {
-        // Act
         var result = await _repository.GetByIdAsync(999);
 
-        // Assert
         Assert.Null(result);
     }
 }

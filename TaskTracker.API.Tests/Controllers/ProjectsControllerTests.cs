@@ -25,13 +25,12 @@ public class ProjectsControllerTests : IClassFixture<WebApplicationFactory<Progr
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Remove the existing DbContext registration
+                   // removing production database
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
                     if (descriptor != null)
                         services.Remove(descriptor);
-
-                    // Add InMemory database
+                    
                     services.AddDbContext<AppDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("TestDatabase");
@@ -46,7 +45,7 @@ public class ProjectsControllerTests : IClassFixture<WebApplicationFactory<Progr
 
     private async Task<string> GetJwtToken()
     {
-        var loginRequest = new { Username = "admin", Password = "password" };
+        var loginRequest = new { Username = "admin", Password = "admin" };
         var content = new StringContent(JsonSerializer.Serialize(loginRequest), Encoding.UTF8, "application/json");
 
         var response = await _client.PostAsync("/api/auth/login", content);
@@ -63,37 +62,36 @@ public class ProjectsControllerTests : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task GetProjects_WithoutAuth_ShouldReturnUnauthorized()
     {
-        // Arrange
+   
         var client = _factory.CreateClient(); // Client without token
 
-        // Act
+       
         var response = await client.GetAsync("/api/projects");
 
-        // Assert
+      
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
     public async Task GetProjects_WithAuth_ShouldReturnOk()
     {
-        // Act
+    
         var response = await _client.GetAsync("/api/projects");
 
-        // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
     [Fact]
     public async Task CreateProject_WithValidData_ShouldReturnCreated()
     {
-        // Arrange
+       
         var project = new CreateProjectDto { Name = "Integration Test Project", Description = "Test Description" };
         var content = new StringContent(JsonSerializer.Serialize(project), Encoding.UTF8, "application/json");
 
-        // Act
+       
         var response = await _client.PostAsync("/api/projects", content);
 
-        // Assert
+       
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -107,14 +105,14 @@ public class ProjectsControllerTests : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task CreateProject_WithInvalidData_ShouldReturnBadRequest()
     {
-        // Arrange
+       
         var project = new CreateProjectDto { Name = "", Description = "Test Description" }; // Empty name
         var content = new StringContent(JsonSerializer.Serialize(project), Encoding.UTF8, "application/json");
 
-        // Act
+       
         var response = await _client.PostAsync("/api/projects", content);
 
-        // Assert
+       
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 }

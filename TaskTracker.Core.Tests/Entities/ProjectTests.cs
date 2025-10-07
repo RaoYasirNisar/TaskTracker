@@ -8,7 +8,6 @@ public class ProjectTests
     [Fact]
     public void Project_Create_ShouldInitializeCorrectly()
     {
-        // Arrange & Act
         var project = new Project
         {
             Id = 1,
@@ -17,7 +16,6 @@ public class ProjectTests
             UserId = 1
         };
 
-        // Assert
         Assert.Equal("Test Project", project.Name);
         Assert.Equal("Test Description", project.Description);
         Assert.Equal(1, project.UserId);

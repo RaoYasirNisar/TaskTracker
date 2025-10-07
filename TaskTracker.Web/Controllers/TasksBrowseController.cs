@@ -21,11 +21,9 @@ public class TasksBrowseController : Controller
     public async Task<IActionResult> Index(TaskFilterViewModel filter)
     {
         try
-        {
-            // Get all projects for the dropdown
+        {   
             var projects = await _apiService.GetProjectsAsync();
-
-            // Get filtered tasks
+       
             var tasksResult = await _apiService.GetFilterTasksAsync(
                 filter.Status,
                 filter.DueDateBefore,

@@ -35,7 +35,7 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 3. Open **Package Manager Console** (`View → Other Windows → Package Manager Console`).
 4. Run the database migration command:
     - `update-database`
-   -Wait for database creation and initial seeding.
+   - `Wait for database creation and initial seeding.`
 
 ### 4. Run the Application
 

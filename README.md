@@ -33,8 +33,9 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 1. Open `appsettings.json` in the `TaskTracker.API` project.
 2. Verify the database connection string is configured for SQL Server.
 3. Open **Package Manager Console** (`View → Other Windows → Package Manager Console`).
-4. Run the database migration command: update-database
-5. Wait for database creation and initial seeding.
+4. Run the database migration command:
+    update-database
+   Wait for database creation and initial seeding.
 
 ### 4. Run the Application
 
@@ -79,7 +80,7 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 ## Project Structure
 
 - `TaskTracker.API` — REST API with JWT auth
-- `TaskTracker.Web` — Blazor Web UI consuming API
+- `TaskTracker.Web` — MVC Web UI consuming API
 - `TaskTracker.Core` — Domain models & interfaces
 - `TaskTracker.Infrastructure` — Data layer with EF Core
 
@@ -97,16 +98,11 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 
 ## Technologies Used
 
-- .NET 8, ASP.NET Core, Blazor
+- .NET 8, ASP.NET Core, MVC
 - Entity Framework Core, SQL Server
 - JWT Authentication
 - Bootstrap 5, Swagger/OpenAPI
 - Clean Architecture, Repository Pattern
 
----
-
-## License
-
-This project is licensed under the MIT License.
 
    

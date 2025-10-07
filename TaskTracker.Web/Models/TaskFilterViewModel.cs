@@ -17,7 +17,7 @@ public class TaskFilterViewModel
     public IEnumerable<ProjectDto> Projects { get; set; } = new List<ProjectDto>();
     public IEnumerable<TaskDto> Tasks { get; set; } = new List<TaskDto>();
 
-    // Status options for dropdown
+    // options for dropdown
     public List<SelectListItem> StatusOptions => new()
     {
         new SelectListItem { Value = "", Text = "All Statuses" },

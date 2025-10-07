@@ -101,7 +101,7 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 - .NET 8, ASP.NET Core, MVC
 - Entity Framework Core, SQL Server
 - JWT Authentication
-- Bootstrap 5, Swagger/OpenAPI
+- Bootstrap 5, Swagger/OpenAPI, CORS 
 - Clean Architecture, Repository Pattern
 
 

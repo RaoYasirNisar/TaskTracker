@@ -34,7 +34,7 @@ Open `TaskTracker.sln` in Visual Studio 2022.
 2. Verify the database connection string is configured for SQL Server.
 3. Open **Package Manager Console** (`View → Other Windows → Package Manager Console`).
 4. Run the database migration command:
-    update-database
+    - update-database
    Wait for database creation and initial seeding.
 
 ### 4. Run the Application

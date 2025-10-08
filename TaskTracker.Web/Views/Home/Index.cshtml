@@ -68,7 +68,89 @@
                         </div>
                     </div>
                 </div>
-              
+                <!-- Public Projects & Tasks Preview -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-project-diagram me-2"></i>Public Projects
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Projects.Any())
+                                {
+                                    <div class="list-group list-group-flush">
+                                        @foreach (var project in Model.Projects.Take(3))
+                                        {
+                                            <div class="list-group-item px-0">
+                                                <h6 class="mb-1">@project.Name</h6>
+                                                <p class="text-muted small mb-1">@project.Description</p>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-tasks me-1"></i>@project.TaskCount tasks
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (Model.Projects.Count() > 3)
+                                    {
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted">And @(Model.Projects.Count() - 3) more projects...</small>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No public projects available.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-tasks me-2"></i>Recent Tasks
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.Tasks.Any())
+                                {
+                                    <div class="list-group list-group-flush">
+                                        @foreach (var task in Model.Tasks.Take(3))
+                                        {
+                                            <div class="list-group-item px-0">
+                                                <h6 class="mb-1">@task.Title</h6>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <small class="text-muted">@task.ProjectName</small>
+                                                    <span class="badge bg-@(task.Status == TaskTracker.Core.Entities.TaskStatus.Completed ? "success" : task.Status == TaskTracker.Core.Entities.TaskStatus.InProgress ? "primary" : "warning")">
+                                                        <h4 class="card-title">@Model.Tasks.Count(t => t.Status == TaskTracker.Core.Entities.TaskStatus.Completed)</h4>
+                                                        @task.Status
+                                                    </span>
+                                                </div>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-calendar me-1"></i>Due: @task.DueDate.ToString("MMM dd, yyyy")
+                                                </small>
+                                            </div>
+                                        }
+                                    </div>
+                                    @if (Model.Tasks.Count() > 3)
+                                    {
+                                        <div class="text-center mt-3">
+                                            <small class="text-muted">And @(Model.Tasks.Count() - 3) more tasks...</small>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">No tasks available.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     }

@@ -76,8 +76,7 @@ public class ApiService : IApiService
     public async Task<PagedResult<TaskDto>> GetFilterTasksAsync(TaskTracker.Core.Entities.TaskStatus? status = null, DateTime? dueDateBefore = null, DateTime? dueDateAfter = null, int? projectId = null, int pageNumber = 1, int pageSize = 10)
     {
         try
-        {
-            // Build query string
+        {            
             var queryParams = new List<string>();
 
             if (status.HasValue)

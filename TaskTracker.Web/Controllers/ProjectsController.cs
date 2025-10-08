@@ -47,8 +47,13 @@ public class ProjectsController : Controller
 
         try
         {
-            await _apiService.UpdateProjectAsync(id, new { Name = name, Description = description });
-            TempData["Success"] = "Project updated successfully";
+            var result = await _apiService.UpdateProjectAsync(id, new { Name = name, Description = description });
+            if(result.Success)
+                TempData["Success"] = "Project updated successfully";
+            else
+            {
+                TempData["Error"] = result.ErrorMessage ?? "Failed to update task";
+            }
         }
         catch (Exception ex)
         {
@@ -64,8 +69,15 @@ public class ProjectsController : Controller
     {
         try
         {
-            await _apiService.DeleteProjectAsync(id);
-            TempData["Success"] = "Project deleted successfully";
+            var result = await _apiService.DeleteProjectAsync(id);
+            if (result.Success)
+            {
+                TempData["Success"] = "Task deleted successfully";
+            }
+            else
+            {
+                TempData["Error"] = result.ErrorMessage ?? "Failed to delete task";
+            }
         }
         catch (Exception ex)
         {

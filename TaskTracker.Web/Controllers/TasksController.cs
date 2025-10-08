@@ -70,19 +70,28 @@ public async Task<IActionResult> Edit(int id, string title, string? description,
 
     try
     {
-        var mappedStatus = MapStatus(status); // <-- Map string to enum
+        var mappedStatus = MapStatus(status);
 
-        await _apiService.UpdateTaskAsync(id, new
+            var result = await _apiService.UpdateTaskAsync(id, new
         {
             Title = title,
             Description = description,
             DueDate = dueDate,
-            Status = mappedStatus, // <-- Send enum, not string
+            Status = mappedStatus,
             ProjectId = projectId
         });
-        TempData["Success"] = "Task updated successfully";
+        
+        if (result.Success)
+        {
+            TempData["Success"] = "Task updated successfully";
+        }
+        else
+        {
+            TempData["Error"] = result.ErrorMessage ?? "Failed to update task";
+        }
+
     }
-    catch (Exception ex)
+        catch (Exception ex)
     {
         _logger.LogError(ex, "Failed to update task");
         TempData["Error"] = "Failed to update task";
@@ -96,8 +105,15 @@ public async Task<IActionResult> Edit(int id, string title, string? description,
     {
         try
         {
-            await _apiService.DeleteTaskAsync(id);
-            TempData["Success"] = "Task deleted successfully";
+            var result = await _apiService.DeleteTaskAsync(id);
+            if (result.Success)
+            {
+                TempData["Success"] = "Task deleted successfully";
+            }
+            else
+            {
+                TempData["Error"] = result.ErrorMessage ?? "Failed to delete task";
+            }
         }
         catch (Exception ex)
         {
@@ -107,4 +123,5 @@ public async Task<IActionResult> Edit(int id, string title, string? description,
 
         return RedirectToAction("Index", "Home");
     }
+
 }

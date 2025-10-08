@@ -163,7 +163,8 @@ public class TasksController : ControllerBase
                 return NotFound();
 
             if (task.UserId != userId)
-                return Forbid("You can only update your own tasks");
+                if (task.UserId != userId)
+                    return Problem("You can only update your own tasks", statusCode: 403);
 
             var project = await _projectRepository.GetByIdAsync(updateDto.ProjectId);
             if (project == null)
@@ -197,7 +198,6 @@ public class TasksController : ControllerBase
             return Problem("An error occurred while updating the task");
         }
     }
-
     [HttpDelete("{id}")]
     [Authorize]
     public async Task<IActionResult> DeleteTask(int id)
@@ -209,9 +209,9 @@ public class TasksController : ControllerBase
 
             if (task == null)
                 return NotFound();
-
+       
             if (task.UserId != userId)
-                return Forbid("You can only delete your own tasks");
+                return Problem("You can only delete your own tasks", statusCode: 403);
 
             await _taskRepository.DeleteAsync(task);
 

@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using TaskTracker.API.DTOs;
+using TaskTracker.Web.Models;
 using static TaskTracker.Web.Services.ApiService;
 
 namespace TaskTracker.Web.Services;
@@ -14,10 +15,10 @@ public interface IApiService
     Task CreateTaskAsync(object task);
     Task<string> LoginAsync(string username, string password);
     Task<RegisterResponse> RegisterAsync(string username, string email, string password);
-    Task UpdateProjectAsync(int id, object project);
-    Task DeleteProjectAsync(int id);
-    Task UpdateTaskAsync(int id, object task);
-    Task DeleteTaskAsync(int id);
+    Task<ApiResult> UpdateProjectAsync(int id, object project);
+    Task<ApiResult> DeleteProjectAsync(int id);
+    Task<ApiResult> UpdateTaskAsync(int id, object task);
+    Task<ApiResult> DeleteTaskAsync(int id);
 }
 
 public class ApiService : IApiService
@@ -167,35 +168,111 @@ public class ApiService : IApiService
 
         throw new HttpRequestException($"Registration failed: {response.StatusCode}");
     }
-    public async Task UpdateProjectAsync(int id, object project)
+    public async Task<ApiResult> UpdateProjectAsync(int id, object project)
     {
         await AddAuthHeaderAsync();
         var content = new StringContent(JsonSerializer.Serialize(project), Encoding.UTF8, "application/json");
         var response = await _httpClient.PutAsync($"/api/projects/{id}", content);
-        response.EnsureSuccessStatusCode();
+        if (response.IsSuccessStatusCode)
+        {
+            return new ApiResult { Success = true };
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            string? errorMessage = null;
+            try
+            {
+                var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                errorMessage = errorObj?.GetValueOrDefault("detail")?.ToString() ?? errorContent;
+            }
+            catch
+            {
+                errorMessage = errorContent;
+            }
+            return new ApiResult { Success = false, ErrorMessage = errorMessage };
+        }
     }
 
-    public async Task DeleteProjectAsync(int id)
+    public async Task<ApiResult> DeleteProjectAsync(int id)
     {
         await AddAuthHeaderAsync();
         var response = await _httpClient.DeleteAsync($"/api/projects/{id}");
-        response.EnsureSuccessStatusCode();
+        if (response.IsSuccessStatusCode)
+        {
+            return new ApiResult { Success = true };
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            string? errorMessage = null;
+            try
+            {
+                var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                errorMessage = errorObj?.GetValueOrDefault("detail")?.ToString() ?? errorContent;
+            }
+            catch
+            {
+                errorMessage = errorContent;
+            }
+            return new ApiResult { Success = false, ErrorMessage = errorMessage };
+        }
     }
 
-    public async Task UpdateTaskAsync(int id, object task)
+    public async Task<ApiResult> UpdateTaskAsync(int id, object task)
     {
         await AddAuthHeaderAsync();
         var content = new StringContent(JsonSerializer.Serialize(task), Encoding.UTF8, "application/json");
         var response = await _httpClient.PutAsync($"/api/tasks/{id}", content);
-        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            return new ApiResult { Success = true };
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            string? errorMessage = null;
+            try
+            {
+                var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                errorMessage = errorObj?.GetValueOrDefault("detail")?.ToString() ?? errorContent;
+            }
+            catch
+            {
+                errorMessage = errorContent;
+            }
+            return new ApiResult { Success = false, ErrorMessage = errorMessage };
+        }
     }
 
-    public async Task DeleteTaskAsync(int id)
+
+    public async Task<ApiResult> DeleteTaskAsync(int id)
     {
         await AddAuthHeaderAsync();
         var response = await _httpClient.DeleteAsync($"/api/tasks/{id}");
-        response.EnsureSuccessStatusCode();
+
+        if (response.IsSuccessStatusCode)
+        {
+            return new ApiResult { Success = true };
+        }
+        else
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();       
+            string? errorMessage = null;
+            try
+            {
+                var errorObj = JsonSerializer.Deserialize<Dictionary<string, object>>(errorContent);
+                errorMessage = errorObj?.GetValueOrDefault("detail")?.ToString() ?? errorContent;
+            }
+            catch
+            {
+                errorMessage = errorContent;
+            }
+            return new ApiResult { Success = false, ErrorMessage = errorMessage };
+        }
     }
+
     public class RegisterResponse
     {
         public string Token { get; set; } = string.Empty;

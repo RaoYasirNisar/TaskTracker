@@ -108,7 +108,7 @@ public class ProjectsController : ControllerBase
                 return NotFound();
 
             if (project.UserId != userId)
-                return Forbid("You can only update your own projects");
+                return Problem("You can only update your own projects",statusCode:403);
 
             project.Name = updateDto.Name;
             project.Description = updateDto.Description;
@@ -145,7 +145,7 @@ public class ProjectsController : ControllerBase
                 return NotFound();
 
             if (project.UserId != userId)
-                return Forbid("You can only delete your own projects");
+                return Problem("You can only delete your own projects", statusCode: 403);
 
             await _projectRepository.DeleteAsync(project);
 

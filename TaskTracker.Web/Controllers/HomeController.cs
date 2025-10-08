@@ -30,8 +30,7 @@ public class HomeController : Controller
             return View(viewModel);
         }
         catch (Exception ex)
-        {
-            // If API is not available, return empty view model
+        {            
             var viewModel = new DashboardViewModel();
             return View(viewModel);
         }

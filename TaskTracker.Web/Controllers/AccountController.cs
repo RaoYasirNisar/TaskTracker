@@ -48,7 +48,7 @@ public class AccountController : Controller
                         IsPersistent = true,
                         ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2)
                     });
-                // Store token in cookie for API calls
+                // add token in cookie for api calls
                 Response.Cookies.Append("AuthToken", token, new CookieOptions
                 {
                     HttpOnly = true,

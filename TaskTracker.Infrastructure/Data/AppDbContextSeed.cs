@@ -8,11 +8,10 @@ public static class AppDbContextSeed
 {
     public static async Task SeedAsync(AppDbContext context, IAuthService authService)
     {
-        // Check if database is already seeded
         if (await context.Users.AnyAsync())
             return;
 
-        // Create default admin user
+
         var adminUser = new User
         {
             Username = "admin",
@@ -24,7 +23,7 @@ public static class AppDbContextSeed
         context.Users.Add(adminUser);
         await context.SaveChangesAsync();
 
-        // Create sample projects for admin
+        // sample project
         var projects = new List<Project>
         {
             new() {
@@ -44,7 +43,7 @@ public static class AppDbContextSeed
         context.Projects.AddRange(projects);
         await context.SaveChangesAsync();
 
-        // Create sample tasks for admin
+        // sample task
         var tasks = new List<TaskItem>
         {
             new() {
